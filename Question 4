@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure to represent a process
+typedef struct {
+    int id;
+    int arrival_time;
+    int execution_time;
+} Process;
+
+// Function to select the process with the smallest execution time
+int selectSmallestExecutionTime(Process processes[], int n) {
+    int smallestIndex = 0;
+    int i;
+    int smallestTime = processes[0].execution_time;
+	for (i = 1; i < n; i++) 
+	{
+        if (processes[i].execution_time < smallestTime) {
+            smallestTime = processes[i].execution_time;
+            smallestIndex = i;
+        }
+    }
+
+    return smallestIndex;
+}
+
+int main() {
+    int n,i;
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    Process processes[n];
+
+    for ( i = 0; i < n; i++) {
+        processes[i].id = i;
+        printf("Enter arrival time for process %d: ", i + 1);
+        scanf("%d", &processes[i].arrival_time);
+        printf("Enter execution time for process %d: ", i + 1);
+        scanf("%d", &processes[i].execution_time);
+    }
+
+    // Simulate scheduling
+    int currentTime = 0;
+    printf("Process execution order: ");
+
+    for (i = 0; i < n; i++) {
+        int smallestIndex = selectSmallestExecutionTime(processes, n);
+
+        // Ensure the process has arrived before executing
+        if (processes[smallestIndex].arrival_time > currentTime) {
+            currentTime = processes[smallestIndex].arrival_time;
+        }
+
+        // Execute the selected process
+        printf("P%d ", processes[smallestIndex].id);
+        currentTime += processes[smallestIndex].execution_time;
+
+        // Mark the process as completed by setting its execution time to a large value
+        processes[smallestIndex].execution_time = INT_MAX;
+    }
+
+    printf("\n");
+    return 0;
+}
